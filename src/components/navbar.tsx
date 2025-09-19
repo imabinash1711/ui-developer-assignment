@@ -5,6 +5,7 @@ import Breadcrumbs from "./breadcrumbs";
 import Input from "./input";
 import { SvgIcon } from "./svg-icon";
 import { useSidebar } from "../hooks/use-sidebar";
+import { useBreadcrumb } from "../hooks/use-breadcrumb";
 
 const ICON_CLASS = "fill-light-black dark:fill-white m-1";
 const SIZE = 28;
@@ -12,11 +13,7 @@ const Navbar = () => {
   const { toggleTheme } = useTheme();
   const leftSidebar = useSidebar("leftSidebar");
   const rightSidebar = useSidebar("rightSidebar");
-  const breadcrumbs: BreadcrumbItem[] = [
-    { label: "Dashboards", href: "/" },
-    { label: "Default", href: "/projects" },
-  ];
-
+  const breadcrumbs: BreadcrumbItem[] = useBreadcrumb().state;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
