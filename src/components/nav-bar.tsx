@@ -1,19 +1,67 @@
-import { Link } from "react-router-dom";
+import { useRef, useEffect } from "react";
+import { useTheme } from "../context/use-theme";
+import type { BreadcrumbItem } from "./breadcrumbs";
+import Breadcrumbs from "./breadcrumbs";
+import Input from "./input";
+import { SvgIcon } from "./svg-icon";
 
+const ICON_CLASS = "fill-light-black dark:fill-white m-1";
+const SIZE = 28;
 const Navbar = () => {
+  const { toggleTheme } = useTheme();
+  const breadcrumbs: BreadcrumbItem[] = [
+    { label: "Dashboards", href: "/" },
+    { label: "Default", href: "/projects" },
+  ];
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const isCmdOrCtrl = event.metaKey || event.ctrlKey;
+
+      if (isCmdOrCtrl && event.key === "/") {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="container mx-auto px-6 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link to="/" className="text-gray-800 hover:text-blue-600">
-              Home
-            </Link>
-            <Link to="/about" className="text-gray-800 hover:text-blue-600">
-              About
-            </Link>
-          </div>
-        </div>
+    <nav className="border border-light-black/10 dark:border-white/10 h-navbar flex justify-between py-5 px-7">
+      <div className="flex gap-2 items-center">
+        <SvgIcon id="Sidebar" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon id="Star" size={SIZE} className={ICON_CLASS} />
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+      <div className="flex gap-2 items-center">
+        <Input
+          ref={inputRef}
+          leftIcon="Search"
+          rightIconText="⌘/"
+          placeholder="Search"
+          className="w-40"
+          parentClassName="mr-3"
+        />
+        <SvgIcon
+          id="Sun"
+          size={SIZE}
+          onClick={toggleTheme}
+          className={ICON_CLASS}
+        />
+        <SvgIcon
+          id="ClockCounterClockwise"
+          size={SIZE}
+          className={ICON_CLASS}
+        />
+        <SvgIcon id="Bell" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon id="Sidebar" size={SIZE} className={ICON_CLASS} />
       </div>
     </nav>
   );
