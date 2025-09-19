@@ -24,7 +24,7 @@ const SIZE = 20;
 const SideBarItem: React.FC<{
   item: SidebarOption;
 }> = ({ item }) => {
-  const { isOpen } = useSidebar();
+  const { isOpen } = useSidebar("leftSidebar");
   const navigate = useNavigate();
   const path = useLocation().pathname;
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
@@ -106,7 +106,7 @@ const SideBarItem: React.FC<{
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ name, icon, options }) => {
-  const { isOpen } = useSidebar();
+  const { isOpen } = useSidebar("leftSidebar");
 
   return (
     <div

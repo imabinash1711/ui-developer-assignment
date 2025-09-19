@@ -10,7 +10,8 @@ const ICON_CLASS = "fill-light-black dark:fill-white m-1";
 const SIZE = 28;
 const Navbar = () => {
   const { toggleTheme } = useTheme();
-  const { toggleSidebar } = useSidebar();
+  const leftSidebar = useSidebar("leftSidebar");
+  const rightSidebar = useSidebar("rightSidebar");
   const breadcrumbs: BreadcrumbItem[] = [
     { label: "Dashboards", href: "/" },
     { label: "Default", href: "/projects" },
@@ -42,7 +43,7 @@ const Navbar = () => {
           id="Sidebar"
           size={SIZE}
           className={ICON_CLASS}
-          onClick={toggleSidebar}
+          onClick={leftSidebar.toggleSidebar}
         />
         <SvgIcon id="Star" size={SIZE} className={ICON_CLASS} />
         <Breadcrumbs items={breadcrumbs} />
@@ -72,7 +73,7 @@ const Navbar = () => {
           id="Sidebar"
           size={SIZE}
           className={ICON_CLASS}
-          onClick={toggleSidebar}
+          onClick={rightSidebar.toggleSidebar}
         />
       </div>
     </nav>

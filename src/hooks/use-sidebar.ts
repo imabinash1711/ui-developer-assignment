@@ -1,9 +1,19 @@
 import { useContext } from "react";
-import { SidebarContext } from "../context/sidebar-context";
+import { DEFAULT_VALUE, SidebarContext } from "../context/sidebar-context";
 
-export const useSidebar = () => {
+interface SidebarContextReturnType {
+  isOpen: boolean;
+  toggleSidebar: () => void;
+}
+export const useSidebar = (
+  key: keyof typeof DEFAULT_VALUE
+): SidebarContextReturnType => {
   const context = useContext(SidebarContext);
   if (!context)
     throw new Error("useSidebar must be used within a SidebarProvider");
-  return context;
+
+  return {
+    isOpen: context.state[key],
+    toggleSidebar: () => context.toggleSidebar(key),
+  };
 };

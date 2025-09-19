@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { SidebarContext } from "./sidebar-context";
+import { DEFAULT_VALUE, SidebarContext } from "./sidebar-context";
 
 export const SidebarProvider: React.FC<{
-  defaultValue: boolean;
+  defaultValue?: Record<string, boolean>;
   children: React.ReactNode;
-}> = ({ defaultValue = true, children }) => {
-  const [isOpen, setIsOpen] = useState(defaultValue);
+}> = ({ defaultValue = DEFAULT_VALUE, children }) => {
+  const [sidebarState, setSidebarState] =
+    useState<Record<string, boolean>>(defaultValue);
 
-  const toggleSidebar = () => setIsOpen((prev) => !prev);
+  const toggleSidebar = (key: string) =>
+    setSidebarState((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
 
   return (
-    <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
+    <SidebarContext.Provider value={{ state: sidebarState, toggleSidebar }}>
       {children}
     </SidebarContext.Provider>
   );
