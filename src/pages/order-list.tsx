@@ -77,16 +77,7 @@ function getCell(contacts: Record<string, string>) {
       case "project":
         return <p>{order.project}</p>;
       case "address":
-        return (
-          <div className="flex gap-1 items-center relative">
-            <p>{order.address}</p>
-            <SvgIcon
-              id="ClipboardText"
-              size={16}
-              className="fill-light-black dark:fill-white invisible group-hover:visible"
-            />
-          </div>
-        );
+        return <OrderAddress address={order.address} />;
       case "date":
         return (
           <div className="flex gap-1 items-center">
@@ -121,6 +112,34 @@ function getCell(contacts: Record<string, string>) {
     }
   };
 }
+
+const OrderAddress: React.FC<{ address: string }> = ({ address }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(address);
+      setCopied(true);
+
+      // revert back after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text:", err);
+    }
+  };
+
+  return (
+    <div className="flex gap-1 items-center relative">
+      <p>{address}</p>
+      <SvgIcon
+        id={copied ? "Check" : "ClipboardText"}
+        size={16}
+        className="fill-light-black dark:fill-white invisible group-hover:visible"
+        onClick={handleCopy}
+      />
+    </div>
+  );
+};
 
 const FilterSection: React.FC<{
   searchValue: string;
