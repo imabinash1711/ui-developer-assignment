@@ -191,7 +191,7 @@ const SeriesLineChart: React.FC = () => {
         } style='display: flex; flex-direction: row; color: ${
           point.color
         }; gap: 4px; align-items: center; padding: 4px;'>
-        <p style='font-size: 16px;'>&#9679</p>
+        <p style='font-size: 16px; margin-top: -4px;'>&#9679</p>
         <span style='color: ${
           theme === "dark" ? "#FFFFFF" : "#1C1C1C"
         } ; font-size: 12px;'>${point.series.name}</span>
@@ -485,11 +485,11 @@ const SalesDonutChart: React.FC = () => {
 
 const Ecommerce = () => {
   return (
-    <div className="flex flex-col flex-1 w-full h-full text-sm gap-4">
+    <div className="flex flex-col flex-1 w-full h-full text-sm gap-7">
       <p className="font-semibold text-light-black dark:text-white px-2 py-1">
         eCommerce
       </p>
-      <div className="flex gap-7">
+      <div className="flex gap-7 -mt-3">
         <div className="flex flex-wrap w-1/2">
           {CARD_DETAILS.map((card, idx) => {
             return (
@@ -511,16 +511,16 @@ const Ecommerce = () => {
           <BarChart />
         </div>
       </div>
-      <div className="flex gap-7 items-center w-full">
-        <div className="w-3/4 h-full">
+      <div className="flex gap-7 w-full">
+        <div className="w-3/4 min-h-full">
           <SeriesLineChart />
         </div>
         <div className="flex-1 w-1/4 h-full">
           <Map />
         </div>
       </div>
-      <div className="flex gap-7 items-center w-full">
-        <div className="w-3/4 h-full">
+      <div className="flex gap-7 w-full">
+        <div className="w-3/4 min-h-full">
           <TopSellingProducts />
         </div>
         <div className="flex-1 w-1/4 h-full">
