@@ -21,7 +21,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
           />
           <div className="flex flex-1 flex-col w-full">
             <Navbar />
-            <main className="text-gray-800 dark:text-gray-200 h-container overflow-auto">
+            <main className="text-gray-800 dark:text-gray-200 w-full h-container overflow-auto p-7">
               {children}
             </main>
           </div>

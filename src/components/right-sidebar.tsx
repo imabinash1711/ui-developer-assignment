@@ -84,7 +84,6 @@ export const RightSideBar = () => {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setData(data);
       })
       .catch((error) => {

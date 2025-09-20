@@ -30,6 +30,8 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   className = "w-full",
   parentClassName = "",
+  value,
+  onChange,
   ...props
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +52,8 @@ const Input: React.FC<InputProps> = ({
 
       <input
         {...props}
+        value={value}
+        onChange={onChange}
         ref={ref || inputRef}
         placeholder={placeholder}
         className={`bg-light-black/5 dark:bg-white/10 py-1 rounded-lg 
