@@ -34,6 +34,9 @@ export function Table<T>({
   }, [currentPage, DATA, rowsPerPage]);
 
   const selectedAll = useMemo(() => {
+    if (DATA.length === 0) {
+      return false;
+    }
     return !DATA.some((entry) => !entry.isSelected);
   }, [DATA]);
 

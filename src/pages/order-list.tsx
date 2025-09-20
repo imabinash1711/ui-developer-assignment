@@ -144,6 +144,7 @@ const OrderAddress: React.FC<{ address: string }> = ({ address }) => {
 const FilterSection: React.FC<{
   searchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  selectedData: Order[];
 }> = ({ searchValue, setSearchValue }) => {
   return (
     <div className="flex items-center justify-between rounded-lg bg-primary-light dark:bg-white/5 p-2 h-fit">
@@ -218,6 +219,7 @@ const OrderList = () => {
       <FilterSection
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        selectedData={selectedData}
       />
       <Table
         data={filteredData}
