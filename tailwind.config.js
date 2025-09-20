@@ -18,6 +18,7 @@ export default {
           green: "#A1E3CB",
           blue: "#B1E3FF",
           yellow: "#FFE999",
+          cyan: "#A8C5DA",
         },
         progress: "#8A8CD9",
         complete: "#4AA785",

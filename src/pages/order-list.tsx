@@ -178,6 +178,7 @@ const OrderList = () => {
         getCell={getCell(contacts)}
         onSelectionChange={(data) => console.log(data)}
         getRowId={(order: Order) => order.orderId}
+        showFilter
       />
     </div>
   );

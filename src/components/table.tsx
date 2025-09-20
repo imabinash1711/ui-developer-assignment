@@ -11,6 +11,8 @@ type GenericTableProps<T> = {
   rowsPerPage?: number;
   onSelectionChange?: (data: T[]) => void;
   getRowId?: (row: T) => string | number;
+  showFilter?: boolean;
+  showRowBorder?: boolean;
 };
 
 type Selectable<T> = T & { isSelected: boolean };
@@ -48,6 +50,8 @@ export function Table<T>({
   rowsPerPage = 10,
   onSelectionChange,
   getRowId,
+  showFilter,
+  showRowBorder = true,
 }: GenericTableProps<T>) {
   const [searchValue, setSearchValue] = useState("");
   const [DATA, setDATA] = useState<Selectable<T>[]>([]);
@@ -135,10 +139,12 @@ export function Table<T>({
 
   return (
     <div className="flex flex-col gap-3">
-      <FilterSection
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-      />
+      {showFilter && (
+        <FilterSection
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+        />
+      )}
       <table className="w-full">
         <thead>
           <tr className="border-b border-light-black/20 dark:border-white/20 text-xs">
@@ -169,7 +175,9 @@ export function Table<T>({
           {paginatedData.map((row, idx) => (
             <tr
               key={idx}
-              className="group border-b border-light-black/5 dark:border-white/10 text-xs cursor-pointer hover:bg-light-black/5 dark:hover:bg-white/10"
+              className={`group ${
+                showRowBorder ? "border-b" : ""
+              } border-light-black/5 dark:border-white/10 text-xs cursor-pointer hover:bg-light-black/5 dark:hover:bg-white/10`}
             >
               {onSelectionChange && (
                 <td
