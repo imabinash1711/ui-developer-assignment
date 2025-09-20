@@ -10,10 +10,7 @@ export const SIDEBAR_OPTIONS: Record<string, SidebarOption[]> = {
     {
       label: "eCommerce",
       icon: "ShoppingBagOpen",
-      subOptions: [
-        { label: "Item 1", path: "/dashboards/eCommerce/item1" },
-        { label: "Item 2", path: "/dashboards/eCommerce/item2" },
-      ],
+      path: "/dashboards/eCommerce",
     },
     {
       label: "Projects",
