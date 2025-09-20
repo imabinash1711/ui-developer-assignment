@@ -1,11 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
-import Input from "../components/input";
+import { useState, useEffect } from "react";
 import { SvgIcon } from "../components/svg-icon";
 import type { Order } from "../types/order-type";
 import { Table } from "../components/table";
-
-const ICON_CLASS = "fill-light-black dark:fill-white m-1";
-const SIZE = 28;
 
 const headers = [
   "orderId",
@@ -141,33 +137,8 @@ const OrderAddress: React.FC<{ address: string }> = ({ address }) => {
   );
 };
 
-const FilterSection: React.FC<{
-  searchValue: string;
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-  selectedData: Order[];
-}> = ({ searchValue, setSearchValue }) => {
-  return (
-    <div className="flex items-center justify-between rounded-lg bg-primary-light dark:bg-white/5 p-2 h-fit">
-      <div className="flex items-center gap-2">
-        <SvgIcon id="Add" size={SIZE} className={ICON_CLASS} />
-        <SvgIcon id="FunnelSimple" size={SIZE} className={ICON_CLASS} />
-        <SvgIcon id="ArrowsDownUp" size={SIZE} className={ICON_CLASS} />
-      </div>
-      <Input
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        leftIcon="Search"
-        placeholder="Search"
-        className="bg-white/40 dark:bg-light-black/40 border border-light-black/10 dark:border-white/10"
-      />
-    </div>
-  );
-};
-
 const OrderList = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [data, setData] = useState<Order[]>([]);
-  const [selectedData, setSelectedData] = useState<Order[]>([]);
   const [contacts, setContacts] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -195,38 +166,18 @@ const OrderList = () => {
       });
   }, []);
 
-  function filterOrders(list: Order[], searchTerm: string) {
-    const term = searchTerm.toLowerCase();
-    if (term == "") {
-      return list;
-    }
-    return list.filter((order) =>
-      Object.values(order).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
-    );
-  }
-
-  const filteredData = useMemo(() => {
-    return filterOrders(data, searchValue);
-  }, [data, searchValue]);
-
   return (
     <div className="flex flex-col flex-1 w-full h-full text-sm gap-4">
       <p className="font-semibold text-light-black dark:text-white px-2 py-1">
         Order List
       </p>
-      <FilterSection
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        selectedData={selectedData}
-      />
       <Table
-        data={filteredData}
+        data={data}
         headers={headers}
         getHeader={getHeaders}
         getCell={getCell(contacts)}
-        onSelectionChange={(data) => setSelectedData(data)}
+        onSelectionChange={(data) => console.log(data)}
+        getRowId={(order: Order) => order.orderId}
       />
     </div>
   );

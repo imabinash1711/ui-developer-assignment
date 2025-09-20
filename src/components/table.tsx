@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SvgIcon } from "./svg-icon";
 import Checkbox from "./checkbox";
+import Input from "./input";
 
 type GenericTableProps<T> = {
   data: T[];
@@ -9,9 +10,35 @@ type GenericTableProps<T> = {
   getCell: (row: T, header: string) => React.ReactNode;
   rowsPerPage?: number;
   onSelectionChange?: (data: T[]) => void;
+  getRowId?: (row: T) => string | number;
 };
 
 type Selectable<T> = T & { isSelected: boolean };
+
+const ICON_CLASS = "fill-light-black dark:fill-white m-1";
+const SIZE = 28;
+
+const FilterSection: React.FC<{
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ searchValue, setSearchValue }) => {
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-primary-light dark:bg-white/5 p-2 h-fit">
+      <div className="flex items-center gap-2">
+        <SvgIcon id="Add" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon id="FunnelSimple" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon id="ArrowsDownUp" size={SIZE} className={ICON_CLASS} />
+      </div>
+      <Input
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        leftIcon="Search"
+        placeholder="Search"
+        className="bg-white/40 dark:bg-light-black/40 border border-light-black/10 dark:border-white/10"
+      />
+    </div>
+  );
+};
 
 export function Table<T>({
   data,
@@ -20,25 +47,39 @@ export function Table<T>({
   getCell,
   rowsPerPage = 10,
   onSelectionChange,
+  getRowId,
 }: GenericTableProps<T>) {
+  const [searchValue, setSearchValue] = useState("");
   const [DATA, setDATA] = useState<Selectable<T>[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const filteredData = useMemo(() => {
+    const term = searchValue.toLowerCase();
+    if (term == "") {
+      return DATA;
+    }
+    return DATA.filter((order) =>
+      Object.values(order).some((value) =>
+        String(value).toLowerCase().includes(term)
+      )
+    );
+  }, [DATA, searchValue]);
+
   const totalPages = useMemo(() => {
-    return Math.ceil(DATA.length / rowsPerPage);
-  }, [DATA.length, rowsPerPage]);
+    return Math.ceil(filteredData.length / rowsPerPage);
+  }, [filteredData.length, rowsPerPage]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * rowsPerPage;
-    return DATA.slice(startIndex, startIndex + rowsPerPage);
-  }, [currentPage, DATA, rowsPerPage]);
+    return filteredData.slice(startIndex, startIndex + rowsPerPage);
+  }, [currentPage, filteredData, rowsPerPage]);
 
   const selectedAll = useMemo(() => {
-    if (DATA.length === 0) {
+    if (filteredData.length === 0) {
       return false;
     }
-    return !DATA.some((entry) => !entry.isSelected);
-  }, [DATA]);
+    return !filteredData.some((entry) => !entry.isSelected);
+  }, [filteredData]);
 
   const goToPage = useCallback(
     (page: number) => {
@@ -65,34 +106,39 @@ export function Table<T>({
 
   const selectAll = useCallback(
     (bool: boolean) => {
-      setDATA((prev) => {
-        const updated = prev.map((row) => ({ ...row, isSelected: bool }));
-        if (onSelectionChange) {
-          onSelectionChange(updated.filter((r) => r.isSelected));
-        }
-        return updated;
-      });
+      if (getRowId) {
+        const details = filteredData.map((row) => getRowId(row));
+        setDATA((prev) =>
+          prev.map((row) =>
+            details.includes(getRowId(row)) ? { ...row, isSelected: bool } : row
+          )
+        );
+      }
     },
-    [onSelectionChange]
+    [filteredData, getRowId]
   );
 
   const setRowSelection = useCallback(
-    (index: number, bool: boolean) => {
-      setDATA((prev) => {
-        const updated = prev.map((row, i) =>
-          i === index ? { ...row, isSelected: bool } : row
+    (detail: T, bool: boolean) => {
+      if (getRowId) {
+        setDATA((prev) =>
+          prev.map((row) =>
+            getRowId(row) === getRowId(detail)
+              ? { ...row, isSelected: bool }
+              : row
+          )
         );
-        if (onSelectionChange) {
-          onSelectionChange(updated.filter((r) => r.isSelected));
-        }
-        return updated;
-      });
+      }
     },
-    [onSelectionChange]
+    [getRowId]
   );
 
   return (
     <div className="flex flex-col gap-3">
+      <FilterSection
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
       <table className="w-full">
         <thead>
           <tr className="border-b border-light-black/20 dark:border-white/20 text-xs">
@@ -132,7 +178,7 @@ export function Table<T>({
                 >
                   <Checkbox
                     checked={row.isSelected}
-                    onChange={(bool) => setRowSelection(idx, bool)}
+                    onChange={(bool) => setRowSelection(row, bool)}
                     className={
                       row.isSelected ? "" : "invisible group-hover:visible"
                     }
