@@ -8,7 +8,7 @@ const DropdownItem: React.FC<{
   item: MenuItem;
 }> = ({ item }) => {
   return (
-    <span className="group px-4 py-2 w-full text-left hover:bg-gray-200 hover:rounded-lg cursor-pointer">
+    <span className="group px-4 py-2 w-full text-left hover:bg-gray-200 hover:rounded-lg cursor-pointer dark:hover:text-light-black">
       {item.label}
     </span>
   );
