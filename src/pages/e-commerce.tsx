@@ -512,7 +512,7 @@ const Ecommerce = () => {
         </div>
       </div>
       <div className="flex md:flex-row flex-col gap-7 w-full">
-        <div className="md:w-3/4 w-full md:min-h-full">
+        <div className="md:w-3/4 md:max-w-3/4 w-full md:min-h-full">
           <SeriesLineChart />
         </div>
         <div className="flex-1 md:w-1/4 w-full h-full">
@@ -520,7 +520,7 @@ const Ecommerce = () => {
         </div>
       </div>
       <div className="flex md:flex-row flex-col gap-7 w-full">
-        <div className="md:w-3/4 w-full md:min-h-full">
+        <div className="md:w-3/4 md:max-w-3/4 w-full md:min-h-full">
           <TopSellingProducts />
         </div>
         <div className="flex-1 md:w-1/4 w-full h-full">

@@ -7,6 +7,7 @@ import { SvgIcon } from "./svg-icon";
 import { useSidebar } from "../hooks/use-sidebar";
 import { useBreadcrumb } from "../hooks/use-breadcrumb";
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { usePopup } from "../hooks/use-popup";
 
 const ICON_CLASS = "fill-light-black dark:fill-white m-1";
 const SIZE = 28;
@@ -17,6 +18,7 @@ const Navbar = () => {
   const rightSidebar = useSidebar("rightSidebar");
   const breadcrumbs: BreadcrumbItem[] = useBreadcrumb().state;
   const inputRef = useRef<HTMLInputElement>(null);
+  const popup = usePopup();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -49,7 +51,12 @@ const Navbar = () => {
             leftSidebar.toggleSidebar();
           }}
         />
-        <SvgIcon id="Star" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon
+          id="Star"
+          size={SIZE}
+          className={ICON_CLASS}
+          onClick={() => popup.showPopup(<p>Clicked on Favourites</p>)}
+        />
         {!isMobile && <Breadcrumbs items={breadcrumbs} />}
       </div>
       <div className="flex gap-2 items-center">
@@ -71,8 +78,14 @@ const Navbar = () => {
           id="ClockCounterClockwise"
           size={SIZE}
           className={ICON_CLASS}
+          onClick={() => popup.showPopup(<p>Clicked on History</p>)}
         />
-        <SvgIcon id="Bell" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon
+          id="Bell"
+          size={SIZE}
+          className={ICON_CLASS}
+          onClick={() => popup.showPopup(<p>Clicked on Notifications</p>)}
+        />
         <SvgIcon
           id="Sidebar"
           size={SIZE}

@@ -4,6 +4,7 @@ import { RightSideBar } from "../components/right-sidebar";
 import { Sidebar } from "../components/sidebar";
 import { SIDEBAR_OPTIONS } from "../constants/sidebar-options";
 import { BreadcrumbProvider } from "../context/breadcrumb-provider";
+import { PopupProvider } from "../context/popup-provider";
 import { SidebarProvider } from "../context/sidebar-provider";
 
 interface LayoutProps {
@@ -15,18 +16,20 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen bg-white dark:bg-light-black transition-colors duration-200 flex">
       <BreadcrumbProvider>
         <SidebarProvider>
-          <Sidebar
-            name="ByeWind"
-            icon="/assets/ByeWind.png"
-            options={SIDEBAR_OPTIONS}
-          />
-          <div className="flex flex-1 flex-col w-full">
-            <Navbar />
-            <main className="text-gray-800 dark:text-gray-200 w-full h-container overflow-auto">
-              <PageContainer>{children}</PageContainer>
-            </main>
-          </div>
-          <RightSideBar />
+          <PopupProvider>
+            <Sidebar
+              name="ByeWind"
+              icon="/assets/ByeWind.png"
+              options={SIDEBAR_OPTIONS}
+            />
+            <div className="flex flex-1 flex-col w-full">
+              <Navbar />
+              <main className="text-gray-800 dark:text-gray-200 w-full h-container overflow-auto">
+                <PageContainer>{children}</PageContainer>
+              </main>
+            </div>
+            <RightSideBar />
+          </PopupProvider>
         </SidebarProvider>
       </BreadcrumbProvider>
     </div>

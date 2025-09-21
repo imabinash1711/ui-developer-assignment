@@ -3,6 +3,8 @@ import { SvgIcon } from "./svg-icon";
 import Checkbox from "./checkbox";
 import Input from "./input";
 import { useIsMobile } from "../hooks/use-is-mobile";
+import { usePopup } from "../hooks/use-popup";
+import React from "react";
 
 type GenericTableProps<T> = {
   data: T[];
@@ -10,10 +12,22 @@ type GenericTableProps<T> = {
   getHeader: (key: string) => string;
   getCell: (row: T, header: string) => React.ReactNode;
   rowsPerPage?: number;
-  onSelectionChange?: (data: T[]) => void;
+  showSelection?: boolean;
   getRowId?: (row: T) => string | number;
   showFilter?: boolean;
   showRowBorder?: boolean;
+};
+
+type FilterSectionProps<T> = {
+  data: Selectable<T>[];
+  headers: string[];
+  getHeader: (key: string) => string;
+  getCell: (row: T, header: string) => React.ReactNode;
+  rowsPerPage?: number;
+  getRowId?: (row: T) => string | number;
+  showRowBorder?: boolean;
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type Selectable<T> = T & { isSelected: boolean };
@@ -21,15 +35,42 @@ type Selectable<T> = T & { isSelected: boolean };
 const ICON_CLASS = "fill-light-black dark:fill-white m-1";
 const SIZE = 28;
 
-const FilterSection: React.FC<{
-  searchValue: string;
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ searchValue, setSearchValue }) => {
+export function FilterSection<T>({
+  data,
+  headers,
+  getHeader,
+  getCell,
+  rowsPerPage = 10,
+  getRowId,
+  showRowBorder = true,
+  searchValue,
+  setSearchValue,
+}: FilterSectionProps<T>) {
   const isMobile = useIsMobile();
+  const popup = usePopup();
+  const SelectedTable = (
+    <Table
+      data={data.filter((entry) => entry.isSelected)}
+      headers={headers}
+      getHeader={getHeader}
+      getCell={getCell}
+      getRowId={getRowId}
+      showRowBorder={showRowBorder}
+      rowsPerPage={rowsPerPage}
+    />
+  );
   return (
     <div className="flex items-center justify-between rounded-lg bg-primary-light dark:bg-white/5 p-2 h-fit">
       <div className="flex items-center gap-2">
-        <SvgIcon id="Add" size={SIZE} className={ICON_CLASS} />
+        <SvgIcon
+          id="Add"
+          size={SIZE}
+          className={ICON_CLASS}
+          onClick={() => {
+            popup.showPopup(SelectedTable);
+            popup.setClassName("!max-w-2xl");
+          }}
+        />
         <SvgIcon id="FunnelSimple" size={SIZE} className={ICON_CLASS} />
         <SvgIcon id="ArrowsDownUp" size={SIZE} className={ICON_CLASS} />
       </div>
@@ -42,7 +83,7 @@ const FilterSection: React.FC<{
       />
     </div>
   );
-};
+}
 
 export function Table<T>({
   data,
@@ -50,7 +91,7 @@ export function Table<T>({
   getHeader,
   getCell,
   rowsPerPage = 10,
-  onSelectionChange,
+  showSelection,
   getRowId,
   showFilter,
   showRowBorder = true,
@@ -139,10 +180,25 @@ export function Table<T>({
     [getRowId]
   );
 
+  if (paginatedData.length === 0) {
+    return (
+      <p className="text-light-black dark:text-white text-sm text-center">
+        No Data Found.
+      </p>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-3">
       {showFilter && (
         <FilterSection
+          data={DATA}
+          headers={headers}
+          getHeader={getHeader}
+          getCell={getCell}
+          rowsPerPage={rowsPerPage}
+          getRowId={getRowId}
+          showRowBorder={showRowBorder}
           searchValue={searchValue}
           setSearchValue={setSearchValue}
         />
@@ -151,7 +207,7 @@ export function Table<T>({
         <table className="w-full">
           <thead>
             <tr className="border-b border-light-black/20 dark:border-white/20 text-xs">
-              {onSelectionChange && (
+              {showSelection && (
                 <th
                   className="p-3 text-light-black/40 dark:text-white/40 text-start font-normal"
                   key="selector"
@@ -182,7 +238,7 @@ export function Table<T>({
                   showRowBorder ? "border-b" : ""
                 } border-light-black/5 dark:border-white/10 text-xs cursor-pointer hover:bg-light-black/5 dark:hover:bg-white/10`}
               >
-                {onSelectionChange && (
+                {showSelection && (
                   <td
                     className="p-3 text-light-black dark:text-white text-start font-normal rounded-l-lg"
                     key={`selector-${idx}`}
@@ -197,7 +253,7 @@ export function Table<T>({
                   </td>
                 )}
                 {headers.map((header, index) => {
-                  const isFirst = onSelectionChange ? false : index === 0;
+                  const isFirst = showSelection ? false : index === 0;
                   const isLast = index === headers.length - 1;
                   return (
                     <td

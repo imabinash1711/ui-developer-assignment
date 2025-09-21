@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { SvgIcon } from "../components/svg-icon";
 import type { Order } from "../types/order-type";
 import { Table } from "../components/table";
+import type { PopupContextType } from "../context/popup-context";
+import { usePopup } from "../hooks/use-popup";
 
 const headers = [
   "orderId",
@@ -52,7 +54,7 @@ function getStatusClass(key: string) {
   }
 }
 
-function getCell(contacts: Record<string, string>) {
+function getCell(contacts: Record<string, string>, popup: PopupContextType) {
   return (order: Order, key: string) => {
     switch (key) {
       case "orderId":
@@ -100,6 +102,7 @@ function getCell(contacts: Record<string, string>) {
             id="DotsThreeOutlineVertical"
             size={16}
             className="fill-light-black dark:fill-white invisible group-hover:visible"
+            onClick={() => popup.showPopup(<p>Clicked on Table Actions</p>)}
           />
         );
       }
@@ -140,6 +143,7 @@ const OrderAddress: React.FC<{ address: string }> = ({ address }) => {
 const OrderList = () => {
   const [data, setData] = useState<Order[]>([]);
   const [contacts, setContacts] = useState<Record<string, string>>({});
+  const popup = usePopup();
 
   useEffect(() => {
     fetch("/assets/jsons/order-list.json")
@@ -175,8 +179,8 @@ const OrderList = () => {
         data={data}
         headers={headers}
         getHeader={getHeaders}
-        getCell={getCell(contacts)}
-        onSelectionChange={(data) => console.log(data)}
+        getCell={getCell(contacts, popup)}
+        showSelection
         getRowId={(order: Order) => order.orderId}
         showFilter
       />
