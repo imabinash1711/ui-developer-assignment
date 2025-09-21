@@ -72,7 +72,7 @@ const SideBarItem: React.FC<{
               id="ArrowLineRight"
               size={16}
               className={`fill-light-black/20 dark:fill-white/20 transition-transform duration-200 ${
-                isOpen ? "rotate-90" : ""
+                isSubMenuOpen ? "rotate-90" : ""
               }`}
             />
           </div>
