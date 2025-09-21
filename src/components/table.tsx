@@ -5,6 +5,7 @@ import Input from "./input";
 import { useIsMobile } from "../hooks/use-is-mobile";
 import { usePopup } from "../hooks/use-popup";
 import React from "react";
+import { DropDownWrapper } from "./multi-dropdown";
 
 type GenericTableProps<T> = {
   data: T[];
@@ -71,8 +72,34 @@ export function FilterSection<T>({
             popup.setClassName("!max-w-2xl");
           }}
         />
-        <SvgIcon id="FunnelSimple" size={SIZE} className={ICON_CLASS} />
-        <SvgIcon id="ArrowsDownUp" size={SIZE} className={ICON_CLASS} />
+        <DropDownWrapper
+          options={headers.map((entry) => {
+            return {
+              label: getHeader(entry),
+              onClick: () => console.log("Clicked Fruits"),
+            };
+          })}
+        >
+          <SvgIcon
+            id="FunnelSimple"
+            size={SIZE}
+            className={ICON_CLASS + " cursor-pointer"}
+          />
+        </DropDownWrapper>
+        <DropDownWrapper
+          options={headers.map((entry) => {
+            return {
+              label: getHeader(entry),
+              onClick: () => console.log("Clicked Fruits"),
+            };
+          })}
+        >
+          <SvgIcon
+            id="ArrowsDownUp"
+            size={SIZE}
+            className={ICON_CLASS + " cursor-pointer"}
+          />
+        </DropDownWrapper>
       </div>
       <Input
         value={searchValue}
