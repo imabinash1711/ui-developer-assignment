@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { SvgIcon } from "./svg-icon";
 import Checkbox from "./checkbox";
 import Input from "./input";
+import { useIsMobile } from "../hooks/use-is-mobile";
 
 type GenericTableProps<T> = {
   data: T[];
@@ -24,6 +25,7 @@ const FilterSection: React.FC<{
   searchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ searchValue, setSearchValue }) => {
+  const isMobile = useIsMobile();
   return (
     <div className="flex items-center justify-between rounded-lg bg-primary-light dark:bg-white/5 p-2 h-fit">
       <div className="flex items-center gap-2">
@@ -35,8 +37,8 @@ const FilterSection: React.FC<{
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         leftIcon="Search"
-        placeholder="Search"
-        className="bg-white/40 dark:bg-light-black/40 border border-light-black/10 dark:border-white/10"
+        placeholder={isMobile ? undefined : "Search"}
+        className="bg-white/40 dark:bg-light-black/40 border border-light-black/10 dark:border-white/10 w-40"
       />
     </div>
   );
@@ -145,72 +147,74 @@ export function Table<T>({
           setSearchValue={setSearchValue}
         />
       )}
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-light-black/20 dark:border-white/20 text-xs">
-            {onSelectionChange && (
-              <th
-                className="p-3 text-light-black/40 dark:text-white/40 text-start font-normal"
-                key="selector"
-              >
-                <Checkbox
-                  checked={selectedAll}
-                  onChange={(bool) => {
-                    selectAll(bool);
-                  }}
-                />
-              </th>
-            )}
-            {headers.map((header) => (
-              <th
-                className="p-3 text-light-black/40 dark:text-white/40 text-start font-normal"
-                key={header}
-              >
-                {getHeader(header)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((row, idx) => (
-            <tr
-              key={idx}
-              className={`group ${
-                showRowBorder ? "border-b" : ""
-              } border-light-black/5 dark:border-white/10 text-xs cursor-pointer hover:bg-light-black/5 dark:hover:bg-white/10`}
-            >
+      <div className="flex overflow-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-light-black/20 dark:border-white/20 text-xs">
               {onSelectionChange && (
-                <td
-                  className="p-3 text-light-black dark:text-white text-start font-normal rounded-l-lg"
-                  key={`selector-${idx}`}
+                <th
+                  className="p-3 text-light-black/40 dark:text-white/40 text-start font-normal"
+                  key="selector"
                 >
                   <Checkbox
-                    checked={row.isSelected}
-                    onChange={(bool) => setRowSelection(row, bool)}
-                    className={
-                      row.isSelected ? "" : "invisible group-hover:visible"
-                    }
+                    checked={selectedAll}
+                    onChange={(bool) => {
+                      selectAll(bool);
+                    }}
                   />
-                </td>
+                </th>
               )}
-              {headers.map((header, index) => {
-                const isFirst = onSelectionChange ? false : index === 0;
-                const isLast = index === headers.length - 1;
-                return (
-                  <td
-                    className={`p-3 text-light-black dark:text-white text-start font-normal ${
-                      isFirst ? "rounded-l-lg" : ""
-                    } ${isLast ? "rounded-r-lg" : ""}`}
-                    key={`${header}-${idx}`}
-                  >
-                    {getCell(row, header)}
-                  </td>
-                );
-              })}
+              {headers.map((header) => (
+                <th
+                  className="p-3 text-light-black/40 dark:text-white/40 text-start font-normal"
+                  key={header}
+                >
+                  {getHeader(header)}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedData.map((row, idx) => (
+              <tr
+                key={idx}
+                className={`group ${
+                  showRowBorder ? "border-b" : ""
+                } border-light-black/5 dark:border-white/10 text-xs cursor-pointer hover:bg-light-black/5 dark:hover:bg-white/10`}
+              >
+                {onSelectionChange && (
+                  <td
+                    className="p-3 text-light-black dark:text-white text-start font-normal rounded-l-lg"
+                    key={`selector-${idx}`}
+                  >
+                    <Checkbox
+                      checked={row.isSelected}
+                      onChange={(bool) => setRowSelection(row, bool)}
+                      className={
+                        row.isSelected ? "" : "invisible group-hover:visible"
+                      }
+                    />
+                  </td>
+                )}
+                {headers.map((header, index) => {
+                  const isFirst = onSelectionChange ? false : index === 0;
+                  const isLast = index === headers.length - 1;
+                  return (
+                    <td
+                      className={`p-3 text-light-black dark:text-white text-start font-normal ${
+                        isFirst ? "rounded-l-lg" : ""
+                      } ${isLast ? "rounded-r-lg" : ""}`}
+                      key={`${header}-${idx}`}
+                    >
+                      {getCell(row, header)}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {totalPages > 1 && (
         <div className="flex gap-2 items-center place-self-end">
           <SvgIcon

@@ -6,11 +6,13 @@ import Input from "./input";
 import { SvgIcon } from "./svg-icon";
 import { useSidebar } from "../hooks/use-sidebar";
 import { useBreadcrumb } from "../hooks/use-breadcrumb";
+import { useIsMobile } from "../hooks/use-is-mobile";
 
 const ICON_CLASS = "fill-light-black dark:fill-white m-1";
 const SIZE = 28;
 const Navbar = () => {
   const { toggleTheme } = useTheme();
+  const isMobile = useIsMobile();
   const leftSidebar = useSidebar("leftSidebar");
   const rightSidebar = useSidebar("rightSidebar");
   const breadcrumbs: BreadcrumbItem[] = useBreadcrumb().state;
@@ -40,18 +42,23 @@ const Navbar = () => {
           id="Sidebar"
           size={SIZE}
           className={ICON_CLASS}
-          onClick={leftSidebar.toggleSidebar}
+          onClick={() => {
+            if (isMobile && rightSidebar.isOpen) {
+              rightSidebar.toggleSidebar();
+            }
+            leftSidebar.toggleSidebar();
+          }}
         />
         <SvgIcon id="Star" size={SIZE} className={ICON_CLASS} />
-        <Breadcrumbs items={breadcrumbs} />
+        {!isMobile && <Breadcrumbs items={breadcrumbs} />}
       </div>
       <div className="flex gap-2 items-center">
         <Input
           ref={inputRef}
           leftIcon="Search"
-          rightIconText="⌘/"
-          placeholder="Search"
-          className="w-40"
+          rightIconText={isMobile ? undefined : "⌘/"}
+          placeholder={isMobile ? undefined : "Search"}
+          className="md:w-40 w-10"
           parentClassName="mr-3"
         />
         <SvgIcon
@@ -70,7 +77,12 @@ const Navbar = () => {
           id="Sidebar"
           size={SIZE}
           className={ICON_CLASS}
-          onClick={rightSidebar.toggleSidebar}
+          onClick={() => {
+            if (isMobile && leftSidebar.isOpen) {
+              leftSidebar.toggleSidebar();
+            }
+            rightSidebar.toggleSidebar();
+          }}
         />
       </div>
     </nav>

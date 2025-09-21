@@ -17,7 +17,7 @@ interface SidebarProps {
 }
 
 const SIDEBAR_CLASS =
-  "transition-all duration-300 overflow-hidden h-screen border-r border-light-black/10 dark:border-white/10";
+  "transition-all duration-300 overflow-hidden h-screen border-r border-light-black/10 dark:border-white/10 lg:static absolute z-10 bg-white dark:bg-light-black";
 const ICON_CLASS = "fill-light-black dark:fill-white";
 const SIZE = 20;
 
@@ -106,7 +106,7 @@ const SideBarItem: React.FC<{
 };
 
 export const Sidebar: React.FC<SidebarProps> = ({ name, icon, options }) => {
-  const { isOpen } = useSidebar("leftSidebar");
+  const { isOpen, toggleSidebar } = useSidebar("leftSidebar");
 
   return (
     <div
@@ -115,11 +115,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ name, icon, options }) => {
       }`}
     >
       <nav className="flex flex-col h-full gap-4 text-sm px-4 py-5 w-sidebar">
-        <div className="flex items-center gap-2 m-1 w-full justify-start">
-          <img src={icon} alt={name} className="w-6 h-6" />
-          <span className="text-light-black dark:text-white whitespace-nowrap">
-            {name}
-          </span>
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2 m-1 w-full justify-start">
+            <img src={icon} alt={name} className="w-6 h-6" />
+            <span className="text-light-black dark:text-white whitespace-nowrap">
+              {name}
+            </span>
+          </div>
+          <SvgIcon
+            id="Sidebar"
+            size={SIZE}
+            className={`${ICON_CLASS} lg:hidden flex`}
+            onClick={toggleSidebar}
+          />
         </div>
         {Object.entries(options).map(([key, option]) => (
           <div key={key} className="flex flex-col gap-1 w-full">

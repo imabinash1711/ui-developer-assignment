@@ -82,7 +82,7 @@ function getCell(contacts: Record<string, string>) {
               size={16}
               className="fill-light-black dark:fill-white"
             />
-            <p>{order.date}</p>
+            <p className="whitespace-nowrap">{order.date}</p>
           </div>
         );
       case "status": {
@@ -90,7 +90,7 @@ function getCell(contacts: Record<string, string>) {
         return (
           <div className="flex items-center">
             <SvgIcon id="Dot" size={16} className={iconClass} />
-            <p className={textClass}>{order.status}</p>
+            <p className={`${textClass} whitespace-nowrap`}>{order.status}</p>
           </div>
         );
       }

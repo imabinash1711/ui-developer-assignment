@@ -1,4 +1,5 @@
 import Navbar from "../components/navbar";
+import { PageContainer } from "../components/page-container";
 import { RightSideBar } from "../components/right-sidebar";
 import { Sidebar } from "../components/sidebar";
 import { SIDEBAR_OPTIONS } from "../constants/sidebar-options";
@@ -22,7 +23,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex flex-1 flex-col w-full">
             <Navbar />
             <main className="text-gray-800 dark:text-gray-200 w-full h-container overflow-auto">
-              <div className="p-7">{children}</div>
+              <PageContainer>{children}</PageContainer>
             </main>
           </div>
           <RightSideBar />

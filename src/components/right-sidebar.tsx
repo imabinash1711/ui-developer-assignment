@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/use-sidebar";
+import { SvgIcon } from "./svg-icon";
 
 interface Detail {
   title: string;
@@ -8,7 +9,9 @@ interface Detail {
 }
 
 const SIDEBAR_CLASS =
-  "transition-all duration-300 overflow-hidden h-screen border-l border-light-black/10 dark:border-white/10";
+  "transition-all duration-300 overflow-hidden h-screen border-l border-light-black/10 dark:border-white/10 lg:static absolute z-10 right-0 bg-white dark:bg-light-black";
+const ICON_CLASS = "fill-light-black dark:fill-white";
+const SIZE = 20;
 
 const NotificationItem: React.FC<{ detail: Detail; index: number }> = ({
   detail,
@@ -74,7 +77,7 @@ const ContactItem: React.FC<{ detail: Detail }> = ({ detail }) => {
 };
 
 export const RightSideBar = () => {
-  const { isOpen } = useSidebar("rightSidebar");
+  const { isOpen, toggleSidebar } = useSidebar("rightSidebar");
   const [data, setData] = useState<Record<string, Detail[]>>({});
 
   useEffect(() => {
@@ -97,7 +100,13 @@ export const RightSideBar = () => {
         isOpen ? "w-rightSidebar" : "w-0"
       }`}
     >
-      <nav className="flex flex-col h-full gap-6 text-sm p-5 pr-3 w-rightSidebar overflow-auto">
+      <nav className="flex flex-col h-full gap-6 text-sm p-5 pr-3 w-rightSidebar overflow-auto relative">
+        <SvgIcon
+          id="Sidebar"
+          size={SIZE}
+          className={`${ICON_CLASS} lg:hidden flex absolute right-5 top-7`}
+          onClick={toggleSidebar}
+        />
         {Object.entries(data).map(([section, details]) => {
           return (
             <div className="flex flex-col gap-2" key={section}>

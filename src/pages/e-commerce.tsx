@@ -29,13 +29,13 @@ const HEADERS = ["name", "price", "quantity", "amount"];
 const getCardPaddingClass = (idx: number) => {
   switch (idx) {
     case 0:
-      return "pr-3.5 pb-3.5";
+      return "md:pr-3.5 md:pb-3.5";
     case 1:
-      return "pl-3.5 pb-3.5";
+      return "md:pl-3.5 md:pb-3.5";
     case 2:
-      return "pr-3.5 pt-3.5";
+      return "md:pr-3.5 md:pt-3.5";
     case 3:
-      return "pl-3.5 pt-3.5";
+      return "md:pl-3.5 md:pt-3.5";
     default:
       return "";
   }
@@ -308,7 +308,7 @@ const SeriesLineChart: React.FC = () => {
 
 const Map: React.FC = () => {
   return (
-    <div className="flex flex-1 flex-col gap-4 p-6 bg-primary-light dark:bg-white/5 h-full rounded-2xl">
+    <div className="flex flex-1 flex-col gap-4 p-6 bg-primary-light dark:bg-white/5 h-full rounded-2xl w-full">
       <p className="font-semibold text-light-black dark:text-white">
         Revenue by Location
       </p>
@@ -489,13 +489,13 @@ const Ecommerce = () => {
       <p className="font-semibold text-light-black dark:text-white px-2 py-1">
         eCommerce
       </p>
-      <div className="flex gap-7 -mt-3">
-        <div className="flex flex-wrap w-1/2">
+      <div className="flex md:flex-row flex-col gap-7 -mt-3 w-full">
+        <div className="flex flex-wrap gap-4 md:gap-0 w-full">
           {CARD_DETAILS.map((card, idx) => {
             return (
               <div
                 key={card.title}
-                className={`w-1/2 ${getCardPaddingClass(idx)}`}
+                className={`md:w-1/2 w-full ${getCardPaddingClass(idx)}`}
               >
                 <Card
                   title={card.title}
@@ -507,23 +507,23 @@ const Ecommerce = () => {
             );
           })}
         </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2 w-full">
           <BarChart />
         </div>
       </div>
-      <div className="flex gap-7 w-full">
-        <div className="w-3/4 min-h-full">
+      <div className="flex md:flex-row flex-col gap-7 w-full">
+        <div className="md:w-3/4 w-full md:min-h-full">
           <SeriesLineChart />
         </div>
-        <div className="flex-1 w-1/4 h-full">
+        <div className="flex-1 md:w-1/4 w-full h-full">
           <Map />
         </div>
       </div>
-      <div className="flex gap-7 w-full">
-        <div className="w-3/4 min-h-full">
+      <div className="flex md:flex-row flex-col gap-7 w-full">
+        <div className="md:w-3/4 w-full md:min-h-full">
           <TopSellingProducts />
         </div>
-        <div className="flex-1 w-1/4 h-full">
+        <div className="flex-1 md:w-1/4 w-full h-full">
           <SalesDonutChart />
         </div>
       </div>
