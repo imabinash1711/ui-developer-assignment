@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import MainLayout from "./layouts/main-layout";
 import NotFound from "./pages/not-found";
 import OrderList from "./pages/order-list";
@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <OrderList />,
+      },
+      {
+        path: "dashboards",
+        element: <Navigate to="/" replace />,
       },
       {
         path: "dashboards/eCommerce",
